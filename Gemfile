@@ -5,6 +5,7 @@ gem 'pg'
 gem 'puma'
 gem 'slim'
 gem 'sidekiq'
+gem 'devise'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
