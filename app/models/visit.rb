@@ -19,16 +19,47 @@ class Visit < ActiveRecord::Base
   def uri
     URI::parse(url)
   end
+
+  after_create :increment_site_visits
+  def increment_site_visits
+    site.visits.increment
+    if unique?
+      site.unique_visits.increment
+    end
+  end
+
+  # Used only on creation to trigger unique counters
+  def unique?
+    unique = case
+    when previous_visit.present?
+      false
+    when site.visitor_ids.include?(visitor_id)
+      false
+    #TODO: More advanced unique testing
+    #when site.visitor_ips.include?(ip_address)
+      # Check for other matching data
+    else
+      true
+    end 
+  end
+
+  def previous_visit
+    site.visits.order("timestamp ASC").where(timestamp: previous_visit, visitor_id: visitor_id).last
+  end
+
+  def next_visit
+    site.visits.order("timestamp ASC").where(previous_visit: timestamp, visitor_id: visitor_id).first
+  end
   
   def self.create_from_client_data(data = {})
     site = Site.find_by_api_key(data[:api_key])
     raise InvalidAPIKey if site.nil?
 
     site.visits.create! do |v|
-      v.timestamp = data[:timestamp]
+      v.timestamp = Time.at(data[:timestamp])
       v.ip_address = data[:ip_address]
       v.visitor_id = data[:visitor_id]
-      v.previous_visit = data[:previous_visit]
+      v.previous_visit = Time.at(data[:previous_visit])
       v.previous_page = data[:previous_page]
       v.user_agent = data[:browser][:user_agent]
       v.platform = data[:browser][:platform]

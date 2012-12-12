@@ -1,6 +1,8 @@
 #= require underscore
 #= require uuid
 
+timestamp = new Date()
+
 class Castle
   default_options:
     api_key: null
@@ -20,6 +22,9 @@ class Castle
     else
       log("No API key specified")
 
+  timestamp: ->
+    timestamp.getTime() / 1000
+
   visitorID: ->
     uuid = this.getCookie("id")
     if !uuid
@@ -31,7 +36,7 @@ class Castle
 
   previousVisit: ->
     previous_visit = this.getCookie("previous_visit")
-    this_visit = (new Date()).toGMTString()
+    this_visit = this.timestamp()
     this.setCookie("previous_visit", this_visit, 1800)
 
     this.log(previous_visit)
@@ -51,7 +56,7 @@ class Castle
 
     data =
       api_key: @options.api_key
-      timestamp: new Date()
+      timestamp: this.timestamp()
       visitor_id: visitor_id
       previous_visit: previous_visit
       previous_page: previous_page
