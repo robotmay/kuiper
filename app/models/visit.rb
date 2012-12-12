@@ -3,6 +3,7 @@ class Visit < ActiveRecord::Base
   serialize :plugins
   attr_accessible :visitor_id
 
+  validates :site_id, presence: true
   validate :host_allowed?
 
   def host_allowed?
