@@ -4,8 +4,12 @@ gem 'rails', '3.2.9'
 gem 'pg'
 gem 'puma'
 gem 'slim'
+gem 'sinatra'
 gem 'sidekiq'
 gem 'devise'
+gem 'agent_orange'
+gem 'postgres_ext'
+gem 'activerecord-postgres-hstore'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

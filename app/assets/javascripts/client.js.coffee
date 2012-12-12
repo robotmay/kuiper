@@ -51,6 +51,7 @@ class Castle
 
     data =
       api_key: @options.api_key
+      timestamp: new Date()
       visitor_id: visitor_id
       previous_visit: previous_visit
       previous_page: previous_page
@@ -68,7 +69,7 @@ class Castle
         screen:
           height: screen.height
           width: screen.width
-          color_depth: screen.pixelDepth
+          colour_depth: screen.pixelDepth
           available_height: screen.availHeight
           available_width: screen.availWidth
       page:
