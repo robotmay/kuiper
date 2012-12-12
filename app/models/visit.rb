@@ -3,8 +3,20 @@ class Visit < ActiveRecord::Base
   serialize :plugins
   attr_accessible :visitor_id
 
+  validate :host_allowed?
+
+  def host_allowed?
+    unless site.allowed_hosts.include?(uri.host)
+      errors.add(:url, "URL does not match allowed hosts")
+    end
+  end
+
   def user_agent
     AgentOrange::UserAgent.new(super)
+  end
+
+  def uri
+    URI::parse(url)
   end
   
   def self.create_from_client_data(data = {})

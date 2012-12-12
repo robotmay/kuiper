@@ -61,7 +61,8 @@ CREATE TABLE sites (
     api_key character varying(255),
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    allowed_hosts character varying(255)[]
 );
 
 
@@ -306,3 +307,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121210185033');
 INSERT INTO schema_migrations (version) VALUES ('20121211001002');
 
 INSERT INTO schema_migrations (version) VALUES ('20121211001810');
+
+INSERT INTO schema_migrations (version) VALUES ('20121212092529');
