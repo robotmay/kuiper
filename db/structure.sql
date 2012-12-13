@@ -239,7 +239,7 @@ CREATE TABLE visits (
     ip_address inet,
     visitor_id uuid,
     previous_visit timestamp without time zone,
-    previous_page character varying(255),
+    previous_page text,
     user_agent character varying(255),
     cookies_enabled boolean,
     java_enabled boolean,
@@ -249,8 +249,8 @@ CREATE TABLE visits (
     screen_colour_depth integer,
     screen_available_height integer,
     screen_available_width integer,
-    url character varying(255),
-    referrer character varying(255),
+    url text,
+    referrer text,
     title character varying(255),
     last_modified timestamp without time zone,
     created_at timestamp without time zone,
@@ -536,3 +536,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121213001526');
 INSERT INTO schema_migrations (version) VALUES ('20121213133146');
 
 INSERT INTO schema_migrations (version) VALUES ('20121213174304');
+
+INSERT INTO schema_migrations (version) VALUES ('20121213235427');
