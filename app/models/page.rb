@@ -12,15 +12,17 @@ class Page < ActiveRecord::Base
 
   validates :site_id, :path, presence: true
 
+  after_create { push("created") }
+
   def pusher_channel
     "private-page-#{id}"
   end
 
-  def push
+  def push(event = "updated")
     begin
       page = PageDecorator.new(self)
       json = Rabl::Renderer.json(page, "pages/show")
-      Pusher.trigger(pusher_channel, "updated", json)
+      Pusher.trigger(pusher_channel, event, json)
     rescue Pusher::Error => ex
       #TODO: Figure out what to do with errors
     end

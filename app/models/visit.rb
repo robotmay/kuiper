@@ -33,11 +33,7 @@ class Visit < ActiveRecord::Base
 
   after_create :increment_site_stats
   def increment_site_stats
-    site.hits.increment
-    if unique?
-      site.unique_hits.increment
-    end
-    
+    site.increment_hits(unique?)
     add_to_site_lists
   end
 
