@@ -86,7 +86,8 @@ CREATE TABLE pages (
     site_id integer,
     path character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    name character varying(255)
 );
 
 
@@ -255,7 +256,9 @@ CREATE TABLE visits (
     created_at timestamp without time zone,
     browser_id integer,
     platform_id integer,
-    page_id integer
+    page_id integer,
+    browser_inner_width integer,
+    browser_inner_height integer
 );
 
 
@@ -529,3 +532,7 @@ INSERT INTO schema_migrations (version) VALUES ('20121212200115');
 INSERT INTO schema_migrations (version) VALUES ('20121212233830');
 
 INSERT INTO schema_migrations (version) VALUES ('20121213001526');
+
+INSERT INTO schema_migrations (version) VALUES ('20121213133146');
+
+INSERT INTO schema_migrations (version) VALUES ('20121213174304');

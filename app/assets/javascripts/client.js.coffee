@@ -69,6 +69,8 @@ class Castle
           version: plugin.version
           filename: plugin.filename
         )
+        inner_height: window.innerHeight
+        inner_width: window.innerWidth
       system:
         screen:
           height: screen.height

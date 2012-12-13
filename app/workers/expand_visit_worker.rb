@@ -4,8 +4,6 @@ class ExpandVisitWorker
 
   def perform(visit_id)
     visit = Visit.find(visit_id)
-    visit.find_or_create_page
-    visit.find_or_create_browser
-    visit.find_or_create_platform
+    visit.expand!
   end
 end

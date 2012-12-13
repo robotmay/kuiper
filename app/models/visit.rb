@@ -6,7 +6,7 @@ class Visit < ActiveRecord::Base
   serialize :plugins
   attr_accessible :visitor_id
 
-  validates :site_id, presence: true
+  validates :site_id, :visitor_id, :timestamp, presence: true
   validate :host_allowed?
 
   def host_allowed?
@@ -21,6 +21,14 @@ class Visit < ActiveRecord::Base
 
   def uri
     URI::parse(url)
+  end
+
+  def screen_size
+    "#{screen_width}x#{screen_height}"
+  end
+
+  def browser_inner_size
+    "#{browser_inner_width}x#{browser_inner_height}"
   end
 
   after_create :increment_site_stats
@@ -41,9 +49,16 @@ class Visit < ActiveRecord::Base
   after_create do
     ExpandVisitWorker.perform_async(id)
   end
+  
+  def expand!
+    find_or_create_page
+    find_or_create_browser
+    find_or_create_platform
+  end
 
   def find_or_create_page
     self.page = site.pages.find_or_create_by_path(uri.path)
+    page.name = title if page.name.blank?
     save
     increment_page_stats
     page
@@ -106,6 +121,10 @@ class Visit < ActiveRecord::Base
     end 
   end
 
+  # Is this a unique visit for the associated page?
+  # Only used on creation
+  #
+  # @return [true, false]
   def unique_for_page?
     unique = case
     when page.visitor_ids.include?(visitor_id)
@@ -129,6 +148,9 @@ class Visit < ActiveRecord::Base
     site.visits.order("timestamp ASC").where(previous_visit: timestamp, visitor_id: visitor_id).first
   end
   
+  # Create a visit record from client-gathered data
+  #
+  # @return [Visit] the created visit
   def self.create_from_client_data(data = {})
     site = Site.find_by_api_key(data[:api_key])
     raise InvalidAPIKey if site.nil?
@@ -148,6 +170,8 @@ class Visit < ActiveRecord::Base
       v.screen_colour_depth = data[:system][:screen][:colour_depth]
       v.screen_available_height = data[:system][:screen][:available_height]
       v.screen_available_width = data[:system][:screen][:available_width]
+      v.browser_inner_height = data[:browser][:inner_height]
+      v.browser_inner_width = data[:browser][:inner_width]
       v.url = data[:page][:url]
       v.referrer = data[:page][:referrer]
       v.title = data[:page][:title]
