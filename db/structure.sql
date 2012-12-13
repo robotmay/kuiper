@@ -43,6 +43,108 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: browsers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE browsers (
+    id integer NOT NULL,
+    name character varying(255),
+    parent_id integer,
+    lft integer,
+    rgt integer,
+    depth integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: browsers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE browsers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE browsers_id_seq OWNED BY browsers.id;
+
+
+--
+-- Name: pages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pages (
+    id integer NOT NULL,
+    site_id integer,
+    path character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pages_id_seq OWNED BY pages.id;
+
+
+--
+-- Name: platforms; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE platforms (
+    id integer NOT NULL,
+    name character varying(255),
+    parent_id integer,
+    lft integer,
+    rgt integer,
+    depth integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: platforms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE platforms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: platforms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE platforms_id_seq OWNED BY platforms.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -151,7 +253,10 @@ CREATE TABLE visits (
     referrer character varying(255),
     title character varying(255),
     last_modified timestamp without time zone,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    browser_id integer,
+    platform_id integer,
+    page_id integer
 );
 
 
@@ -178,6 +283,27 @@ ALTER SEQUENCE visits_id_seq OWNED BY visits.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY browsers ALTER COLUMN id SET DEFAULT nextval('browsers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pages ALTER COLUMN id SET DEFAULT nextval('pages_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY platforms ALTER COLUMN id SET DEFAULT nextval('platforms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY sites ALTER COLUMN id SET DEFAULT nextval('sites_id_seq'::regclass);
 
 
@@ -193,6 +319,30 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY visits ALTER COLUMN id SET DEFAULT nextval('visits_id_seq'::regclass);
+
+
+--
+-- Name: browsers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY browsers
+    ADD CONSTRAINT browsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pages
+    ADD CONSTRAINT pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: platforms_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY platforms
+    ADD CONSTRAINT platforms_pkey PRIMARY KEY (id);
 
 
 --
@@ -220,6 +370,48 @@ ALTER TABLE ONLY visits
 
 
 --
+-- Name: index_browsers_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_browsers_on_name ON browsers USING btree (name);
+
+
+--
+-- Name: index_browsers_on_parent_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_browsers_on_parent_id ON browsers USING btree (parent_id);
+
+
+--
+-- Name: index_pages_on_path; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_pages_on_path ON pages USING btree (path);
+
+
+--
+-- Name: index_pages_on_site_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_pages_on_site_id ON pages USING btree (site_id);
+
+
+--
+-- Name: index_platforms_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_platforms_on_name ON platforms USING btree (name);
+
+
+--
+-- Name: index_platforms_on_parent_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_platforms_on_parent_id ON platforms USING btree (parent_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -231,6 +423,13 @@ CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 --
 
 CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+
+
+--
+-- Name: index_visits_on_browser_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visits_on_browser_id ON visits USING btree (browser_id);
 
 
 --
@@ -259,6 +458,20 @@ CREATE INDEX index_visits_on_java_enabled ON visits USING btree (java_enabled);
 --
 
 CREATE INDEX index_visits_on_last_modified ON visits USING btree (last_modified);
+
+
+--
+-- Name: index_visits_on_page_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visits_on_page_id ON visits USING btree (page_id);
+
+
+--
+-- Name: index_visits_on_platform_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visits_on_platform_id ON visits USING btree (platform_id);
 
 
 --
@@ -309,3 +522,9 @@ INSERT INTO schema_migrations (version) VALUES ('20121211001002');
 INSERT INTO schema_migrations (version) VALUES ('20121211001810');
 
 INSERT INTO schema_migrations (version) VALUES ('20121212092529');
+
+INSERT INTO schema_migrations (version) VALUES ('20121212200050');
+
+INSERT INTO schema_migrations (version) VALUES ('20121212200115');
+
+INSERT INTO schema_migrations (version) VALUES ('20121212233830');

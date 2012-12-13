@@ -34,6 +34,8 @@ GEM
       multi_json (~> 1.0)
     agent_orange (0.1.4)
     arel (3.0.2)
+    awesome_nested_set (2.1.4)
+      activerecord (>= 3.0.0)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     celluloid (0.12.4)
@@ -154,6 +156,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-postgres-hstore
   agent_orange
+  awesome_nested_set
   coffee-rails (~> 3.2.1)
   devise
   jquery-rails

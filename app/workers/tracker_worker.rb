@@ -1,6 +1,6 @@
 class TrackerWorker
   include Sidekiq::Worker
-  sidekiq_options queue: :incoming
+  sidekiq_options queue: :high
 
   def perform(client_data, server_data)
     client_data = JSON.parse(client_data, symbolize_names: true)

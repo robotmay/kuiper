@@ -1,5 +1,8 @@
 class Visit < ActiveRecord::Base
   belongs_to :site
+  belongs_to :page
+  belongs_to :browser
+  belongs_to :platform
   serialize :plugins
   attr_accessible :visitor_id
 
@@ -26,9 +29,63 @@ class Visit < ActiveRecord::Base
     if unique?
       site.unique_visits.increment
     end
+    
+    add_to_site_lists
   end
 
+  def add_to_site_lists
+    site.visitor_ids << visitor_id unless site.visitor_ids.include?(visitor_id)
+    site.visitor_ips << ip_address unless site.visitor_ips.include?(ip_address)
+  end
+
+  after_create do
+    ExpandVisitWorker.perform_async(id)
+  end
+
+  def find_or_create_page
+    self.page = site.pages.find_or_create_by_path(uri.path)
+    save
+    increment_page_stats
+    page
+  end
+
+  def increment_page_stats
+    page.visits.increment
+    if unique_for_page?
+      page.unique_visits.increment
+    end
+  end
+
+  def find_or_create_browser
+    self.browser = Browser.find_or_create_from_user_agent(user_agent)
+    save
+    increment_browser_stats
+    browser
+  end
+
+  def increment_browser_stats
+    browser.users.increment
+    browser.parent.users.increment
+    browser.users_for_site(site.id).increment
+  end
+
+  def find_or_create_platform
+    self.platform = Platform.find_or_create_from_user_agent(user_agent)
+    save
+    increment_platform_stats
+    platform
+  end
+
+  def increment_platform_stats
+    platform.users.increment
+    platform.parent.users.increment
+    browser.users_for_site(site.id).increment
+  end
+
+  # Is this a unique visit?
   # Used only on creation to trigger unique counters
+  #
+  # @return [true, false]
   def unique?
     unique = case
     when previous_visit.present?
@@ -43,11 +100,26 @@ class Visit < ActiveRecord::Base
     end 
   end
 
-  def previous_visit
+  def unique_for_page?
+    unique = case
+    when page.visitor_ids.include?(visitor_id)
+      false
+    else
+      true
+    end
+  end
+
+  # Finds the previous visit in this session
+  #
+  # @return [Visit] the previous visit
+  def previous
     site.visits.order("timestamp ASC").where(timestamp: previous_visit, visitor_id: visitor_id).last
   end
 
-  def next_visit
+  # Finds the next visit in this session
+  #
+  # @return [Visit] the next visit
+  def next
     site.visits.order("timestamp ASC").where(previous_visit: timestamp, visitor_id: visitor_id).first
   end
   

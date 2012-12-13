@@ -12,6 +12,7 @@ gem 'postgres_ext'
 gem 'activerecord-postgres-hstore'
 gem 'multi_fetch_fragments'
 gem 'redis-objects', require: 'redis/objects'
+gem 'awesome_nested_set'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
