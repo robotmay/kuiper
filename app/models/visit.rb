@@ -34,12 +34,6 @@ class Visit < ActiveRecord::Base
   after_create :increment_site_stats
   def increment_site_stats
     site.increment_hits(unique?)
-    add_to_site_lists
-  end
-
-  def add_to_site_lists
-    site.visitor_ids << visitor_id unless site.visitor_ids.include?(visitor_id)
-    site.visitor_ips << ip_address unless site.visitor_ips.include?(ip_address)
   end
 
   after_create do
@@ -61,16 +55,7 @@ class Visit < ActiveRecord::Base
   end
 
   def increment_page_stats
-    page.hits.increment
-    if unique_for_page?
-      page.unique_hits.increment
-    end
-
-    add_to_page_lists
-  end
-
-  def add_to_page_lists
-    page.visitor_ids << visitor_id unless page.visitor_ids.include?(visitor_id)
+    page.increment_hits(unique_for_page?)
   end
 
   def find_or_create_browser
@@ -124,6 +109,8 @@ class Visit < ActiveRecord::Base
   def unique_for_page?
     unique = case
     when page.visitor_ids.include?(visitor_id)
+      false
+    when page.recent_visitor?(visitor_id)
       false
     else
       true

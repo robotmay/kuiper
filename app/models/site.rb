@@ -6,8 +6,6 @@ class Site < ActiveRecord::Base
   has_many :visits
   has_many :pages
 
-  list :visitor_ids
-  list :visitor_ips
   counter :hits
   counter :unique_hits
 
@@ -19,10 +17,25 @@ class Site < ActiveRecord::Base
   after_create { push("created") }
   set_callback :counters_updated, :after, :push
 
-  def populate_redis_lists
-    visits.find_each do |visit|
-      visitor_ids << visit.visitor_id unless visitor_ids.include?(visit.visitor_id)
-      visitor_ips << visit.ip_address.to_s unless visitor_ips.include?(visit.ip_address.to_s)
+  def visitor_ids
+    @visitor_ids ||= Rails.cache.fetch("sites/#{id}/visitor_ids", expires_in: 10.minutes) do
+      ids = []
+      visits.find_in_batches do |visits|
+        ids.concat visits.map(&:visitor_id)
+      end
+
+      ids.uniq
+    end
+  end
+
+  def visitor_ips
+    @visitor_ips ||= Rails.cache.fetch("sites/#{id}/visitor_ips", expires_in: 10.minutes) do
+      ips = []
+      visits.find_in_batches do |visits|
+        ids.concat visits.map(&:ip_address)
+      end
+
+      ips.uniq
     end
   end
 
