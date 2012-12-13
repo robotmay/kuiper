@@ -137,7 +137,7 @@ class Visit < ActiveRecord::Base
       v.timestamp = Time.at(data[:timestamp].to_f)
       v.ip_address = data[:ip_address]
       v.visitor_id = data[:visitor_id]
-      v.previous_visit = Time.at(data[:previous_visit].to_f)
+      v.previous_visit = Time.at(data[:previous_visit].to_f) unless data[:previous_visit].blank?
       v.previous_page = data[:previous_page]
       v.user_agent = data[:browser][:user_agent]
       v.cookies_enabled = data[:browser][:cookies_enabled]
