@@ -7,7 +7,7 @@ class Browser < ActiveRecord::Base
   attr_accessible :name
 
   def users_for_site(site_id)
-    Redis::Counter.new("#{redis_field_key(:users_for_site)}:#{site_id}")
+    Redis::Counter.new("browsers:#{id}:users_for_site:#{site_id}")
   end
 
   def self.find_or_create_from_user_agent(user_agent)

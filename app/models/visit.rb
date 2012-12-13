@@ -23,11 +23,11 @@ class Visit < ActiveRecord::Base
     URI::parse(url)
   end
 
-  after_create :increment_site_visits
-  def increment_site_visits
-    site.visits.increment
+  after_create :increment_site_stats
+  def increment_site_stats
+    site.hits.increment
     if unique?
-      site.unique_visits.increment
+      site.unique_hits.increment
     end
     
     add_to_site_lists
@@ -50,10 +50,16 @@ class Visit < ActiveRecord::Base
   end
 
   def increment_page_stats
-    page.visits.increment
+    page.hits.increment
     if unique_for_page?
-      page.unique_visits.increment
+      page.unique_hits.increment
     end
+
+    add_to_page_lists
+  end
+
+  def add_to_page_lists
+    page.visitor_ids << visitor_id unless page.visitor_ids.include?(visitor_id)
   end
 
   def find_or_create_browser
@@ -128,13 +134,12 @@ class Visit < ActiveRecord::Base
     raise InvalidAPIKey if site.nil?
 
     site.visits.create! do |v|
-      v.timestamp = Time.at(data[:timestamp])
+      v.timestamp = Time.at(data[:timestamp].to_f)
       v.ip_address = data[:ip_address]
       v.visitor_id = data[:visitor_id]
-      v.previous_visit = Time.at(data[:previous_visit])
+      v.previous_visit = Time.at(data[:previous_visit].to_f)
       v.previous_page = data[:previous_page]
       v.user_agent = data[:browser][:user_agent]
-      v.platform = data[:browser][:platform]
       v.cookies_enabled = data[:browser][:cookies_enabled]
       v.java_enabled = data[:browser][:java_enabled]
       v.plugins = data[:browser][:plugins]

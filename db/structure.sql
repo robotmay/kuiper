@@ -240,7 +240,6 @@ CREATE TABLE visits (
     previous_visit timestamp without time zone,
     previous_page character varying(255),
     user_agent character varying(255),
-    platform character varying(255),
     cookies_enabled boolean,
     java_enabled boolean,
     plugins text,
@@ -528,3 +527,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121212200050');
 INSERT INTO schema_migrations (version) VALUES ('20121212200115');
 
 INSERT INTO schema_migrations (version) VALUES ('20121212233830');
+
+INSERT INTO schema_migrations (version) VALUES ('20121213001526');

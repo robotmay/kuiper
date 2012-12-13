@@ -62,7 +62,6 @@ class Castle
       previous_page: previous_page
       browser:
         user_agent: navigator.userAgent
-        platform: navigator.platform
         cookies_enabled: navigator.cookieEnabled
         java_enabled: navigator.javaEnabled()
         plugins: _.map(navigator.plugins, (plugin) ->

@@ -5,8 +5,8 @@ class Page < ActiveRecord::Base
   has_many :visits
 
   list :visitor_ids
-  counter :visits
-  counter :unique_visits
+  counter :hits
+  counter :unique_hits
 
   attr_accessible :path, :site_id
 

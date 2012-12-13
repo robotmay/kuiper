@@ -2,11 +2,12 @@ class Site < ActiveRecord::Base
   include Redis::Objects
 
   has_many :visits
+  has_many :pages
 
   list :visitor_ids
   list :visitor_ips
-  counter :visits
-  counter :unique_visits
+  counter :hits
+  counter :unique_hits
 
   attr_accessible :api_key, :name, :user_id, :allowed_hosts
 
