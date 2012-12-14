@@ -36,7 +36,7 @@ class Visit < ActiveRecord::Base
     site.increment_hits(unique?)
   end
 
-  after_create do
+  after_commit on: :create do
     ExpandVisitWorker.perform_async(id)
   end
   
