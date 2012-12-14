@@ -38,6 +38,7 @@ class Visit < ActiveRecord::Base
 
   after_commit on: :create do
     ExpandVisitWorker.perform_async(id)
+    OnlineVisitorsWorker.perform_async(id)
   end
   
   def expand!

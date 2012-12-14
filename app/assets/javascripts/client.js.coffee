@@ -23,7 +23,9 @@ class Kuiper
       log("No API key specified")
 
   timestamp: ->
-    timestamp.getTime() / 1000
+    timestamp = timestamp.getTime() / 1000
+    this.log(timestamp)
+    timestamp
 
   visitorID: ->
     uuid = this.getCookie("id")

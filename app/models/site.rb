@@ -8,6 +8,7 @@ class Site < ActiveRecord::Base
 
   counter :hits
   counter :unique_hits
+  hash_key :online_visitors
 
   attr_accessible :api_key, :name, :user_id, :allowed_hosts
 
