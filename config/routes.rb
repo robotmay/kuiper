@@ -1,6 +1,6 @@
 require 'sidekiq/web'
 
-Castle::Application.routes.draw do
+Kuiper::Application.routes.draw do
   mount Sidekiq::Web => '/queue'
   devise_for :users
   

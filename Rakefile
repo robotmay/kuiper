@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Castle::Application.load_tasks
+Kuiper::Application.load_tasks

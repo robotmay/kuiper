@@ -3,14 +3,14 @@
 
 timestamp = new Date()
 
-class Castle
+class Kuiper
   default_options:
     api_key: null
-    api_base_url: "http://api.castle.io"
+    api_base_url: "http://api.k.uiper.net"
     api_track_path: "/track.gif"
     current_user: null
     debug: false
-    cookie_prefix: "_castle_"
+    cookie_prefix: "_kuiper_"
 
   constructor: (options = {}) ->
     @options = _.extend(@default_options, options)
@@ -127,4 +127,4 @@ class Castle
     if @options.debug || force
       console.log message
 
-window.Castle = Castle
+window.Kuiper = Kuiper
