@@ -60,7 +60,8 @@ class Site < ActiveRecord::Base
         online_visitors.delete(visit.visitor_id)
       else
         online_visitors[visit.visitor_id] = timestamp
-        OnlineVisitorsWorker.perform_in(5.minutes, visit.id)
+        #TODO: Allow this to be configured per site
+        OnlineVisitorsWorker.perform_in(1.minute, visit.id)
       end
     end
   end
