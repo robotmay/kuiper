@@ -9,4 +9,8 @@ class SiteDecorator < Draper::Base
   def unique_hits
     site.unique_hits.value
   end
+
+  def online_visitors
+    site.online_visitors.count
+  end
 end

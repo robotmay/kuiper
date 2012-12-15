@@ -48,6 +48,21 @@ class Site < ActiveRecord::Base
       end
     end
   end
+
+  def add_or_remove_from_online_visitors(visit_id)
+    run_callbacks :counters_updated do
+      visit = Visit.find(visit_id)
+      timestamp = visit.timestamp.to_i.to_s
+      last_seen = online_visitors[visit.visitor_id]
+
+      if last_seen.present? && last_seen == timestamp
+        online_visitors.delete(visit.visitor_id)
+      else
+        online_visitors[visit.visitor_id] = timestamp
+        OnlineVisitorsWorker.perform_in(5.minutes, visit.id)
+      end
+    end
+  end
   
   def pusher_channel
     "private-site-#{id}"
