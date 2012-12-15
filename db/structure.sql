@@ -258,7 +258,8 @@ CREATE TABLE visits (
     platform_id integer,
     page_id integer,
     browser_inner_width integer,
-    browser_inner_height integer
+    browser_inner_height integer,
+    country_code character varying(2)
 );
 
 
@@ -442,6 +443,13 @@ CREATE INDEX index_visits_on_cookies_enabled ON visits USING btree (cookies_enab
 
 
 --
+-- Name: index_visits_on_country_code; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visits_on_country_code ON visits USING btree (country_code);
+
+
+--
 -- Name: index_visits_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -538,3 +546,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121213133146');
 INSERT INTO schema_migrations (version) VALUES ('20121213174304');
 
 INSERT INTO schema_migrations (version) VALUES ('20121213235427');
+
+INSERT INTO schema_migrations (version) VALUES ('20121215010950');

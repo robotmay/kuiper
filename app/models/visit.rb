@@ -142,6 +142,7 @@ class Visit < ActiveRecord::Base
     site.visits.create! do |v|
       v.timestamp = Time.at(data[:timestamp].to_f)
       v.ip_address = data[:ip_address]
+      v.country_code = data[:country_code]
       v.visitor_id = data[:visitor_id]
       v.previous_visit = Time.at(data[:previous_visit].to_f) unless data[:previous_visit].blank?
       v.previous_page = data[:previous_page]
