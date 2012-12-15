@@ -78,6 +78,37 @@ ALTER SEQUENCE browsers_id_seq OWNED BY browsers.id;
 
 
 --
+-- Name: online_visitor_counts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE online_visitor_counts (
+    id integer NOT NULL,
+    site_id integer,
+    count integer,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: online_visitor_counts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE online_visitor_counts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: online_visitor_counts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE online_visitor_counts_id_seq OWNED BY online_visitor_counts.id;
+
+
+--
 -- Name: pages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -293,6 +324,13 @@ ALTER TABLE ONLY browsers ALTER COLUMN id SET DEFAULT nextval('browsers_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY online_visitor_counts ALTER COLUMN id SET DEFAULT nextval('online_visitor_counts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY pages ALTER COLUMN id SET DEFAULT nextval('pages_id_seq'::regclass);
 
 
@@ -330,6 +368,14 @@ ALTER TABLE ONLY visits ALTER COLUMN id SET DEFAULT nextval('visits_id_seq'::reg
 
 ALTER TABLE ONLY browsers
     ADD CONSTRAINT browsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: online_visitor_counts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY online_visitor_counts
+    ADD CONSTRAINT online_visitor_counts_pkey PRIMARY KEY (id);
 
 
 --
@@ -384,6 +430,20 @@ CREATE INDEX index_browsers_on_name ON browsers USING btree (name);
 --
 
 CREATE INDEX index_browsers_on_parent_id ON browsers USING btree (parent_id);
+
+
+--
+-- Name: index_online_visitor_counts_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_online_visitor_counts_on_created_at ON online_visitor_counts USING btree (created_at);
+
+
+--
+-- Name: index_online_visitor_counts_on_site_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_online_visitor_counts_on_site_id ON online_visitor_counts USING btree (site_id);
 
 
 --
@@ -548,3 +608,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121213174304');
 INSERT INTO schema_migrations (version) VALUES ('20121213235427');
 
 INSERT INTO schema_migrations (version) VALUES ('20121215010950');
+
+INSERT INTO schema_migrations (version) VALUES ('20121215114233');

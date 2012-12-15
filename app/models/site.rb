@@ -5,6 +5,7 @@ class Site < ActiveRecord::Base
   belongs_to :user
   has_many :visits
   has_many :pages
+  has_many :online_visitor_counts
 
   counter :hits
   counter :unique_hits
@@ -62,6 +63,10 @@ class Site < ActiveRecord::Base
         OnlineVisitorsWorker.perform_in(5.minutes, visit.id)
       end
     end
+  end
+
+  def log_current_online_visitors_count
+    online_visitor_counts.create(count: online_visitors.count)
   end
   
   def pusher_channel
