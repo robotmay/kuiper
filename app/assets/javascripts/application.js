@@ -14,22 +14,8 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require pusher.min
-
-// Batman.js and its adapters
-//= require batman/es5-shim
-//= require batman/batman
-//= require batman/batman.jquery
-//= require batman/batman.rails
-//= require batman/batman_pusher
-
+//= require sammy
+//= require rivets.min
+//= require stapes.min
+//= require rivets_stapes_adapter
 //= require kuiper
-
-//= require_tree ./models
-//= require_tree ./controllers
-//= require_tree ./helpers
-
-// Run the Batman app
-$(document).ready(function(){
-  Kuiper.run();
-});
-

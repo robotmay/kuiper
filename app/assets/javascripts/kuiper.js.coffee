@@ -1,36 +1,48 @@
-window.Kuiper = class Kuiper extends Batman.App
-  @root 'sites#index'
-  @resources 'sites', ->
-    @resources 'pages'
+Kuiper = $.sammy ->
+  @element_selector = "#workspace"
 
-  Batman.ViewStore.prefix = "assets/views"
+  @get "#/", (context) ->
 
-  @on 'run', ->
-    Kuiper.pusher = new Pusher("3379d6e6ccdeed1c69d1")
+Kuiper.Base = Stapes.create().extend()
+  # Useful for base extensions
 
-    # Load the current user
-    Kuiper.current_user = new Kuiper.User()
-    Kuiper.current_user.url = "/users/current"
-    Kuiper.current_user.load (err, result) -> 
-      throw err if err
-    Kuiper.current_user.on "loaded", ->
-      channel = Kuiper.pusher.subscribe("private-account-#{@get('account_id')}")
-      new BatmanPusher(channel)
+Kuiper.Model = Kuiper.Base.create().extend
+  path: ""
 
-    console?.log "Running ...."
+  find: (id, callback) ->
+    $.getJSON @recordPath(id), (data) =>
+      model = @create().set(data)
+      callback(model)
 
-  @on 'ready', ->
+  recordPath: (id) ->
+    "#{@path}/#{id}.json"
+    
+Kuiper.Collection = Kuiper.Base.create().extend
+  path: ""
+  model: null
 
-  @flash: Batman()
-  @flash.accessor
-    get: (key) -> @[key]
-    set: (key, value) ->
-      @[key] = value
-      if value isnt ''
-        setTimeout =>
-          @set(key, '')
-        , 2000
-      value
+  all: ->
+    @getAllAsArray()
 
-  @flashSuccess: (message) -> @set 'flash.success', message
-  @flashError: (message) ->  @set 'flash.error', message
+  find: (id) ->
+    @filter (item) ->
+      item.id is id
+
+  fetch: ->
+    $.getJSON @path, (data) ->
+      for obj in data
+        existing = @find(obj.id)
+        if existing
+          existing.set(obj)
+        else
+          new_record = new model()
+          @push new_record.set(obj)
+
+Kuiper.Site = Kuiper.Model.create().extend
+  path: "/sites"
+
+Kuiper.SiteCollection = Kuiper.Collection.create().extend
+  path: "/sites"
+  model: Kuiper.Site
+
+window.Kuiper = Kuiper

@@ -73,13 +73,16 @@ class Site < ActiveRecord::Base
   def pusher_json
     # Don't touch, this is a hack to support strange structures in rabl
     site = SiteDecorator.new(self)
-    data = OpenStruct.new({ model_name: "Site", model_data: site })
-    json = Rabl::Renderer.json(data, "sites/pusher")
+    json = Rabl::Renderer.json(data, "sites/show")
+  end
+
+  def pusher_channel
+    "private-#{id}-sites"
   end
 
   def push(event = "updated")
     begin
-      Pusher.trigger(account.pusher_channel, event, pusher_json)
+      Pusher.trigger(pusher_channel, event, pusher_json)
     rescue Pusher::Error => ex
       #TODO: Figure out what to do with errors
     end
