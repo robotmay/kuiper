@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   respond_to :json
 
   before_filter do
-    @site = current_user.sites.find(params[:site_id])
+    @site = current_account.sites.find(params[:site_id])
   end
 
   def index

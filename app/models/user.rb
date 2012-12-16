@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
-  has_many :sites
+  belongs_to :account
+  has_many :sites, through: :account
   has_many :pages, through: :sites
 
   devise :database_authenticatable, :registerable,
@@ -9,8 +10,7 @@ class User < ActiveRecord::Base
 
   def available_pusher_channels
     channels = []
-    channels.concat sites.map(&:pusher_channel)
-    channels.concat pages.map(&:pusher_channel)
+    channels << account.pusher_channel
     channels
   end
 end

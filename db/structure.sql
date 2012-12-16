@@ -43,6 +43,36 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: accounts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE accounts (
+    id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
+
+
+--
 -- Name: browsers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -191,7 +221,7 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE sites (
     id integer NOT NULL,
-    user_id integer,
+    account_id integer,
     api_key character varying(255),
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
@@ -236,7 +266,8 @@ CREATE TABLE users (
     current_sign_in_ip character varying(255),
     last_sign_in_ip character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    account_id integer
 );
 
 
@@ -317,6 +348,13 @@ ALTER SEQUENCE visits_id_seq OWNED BY visits.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY browsers ALTER COLUMN id SET DEFAULT nextval('browsers_id_seq'::regclass);
 
 
@@ -360,6 +398,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY visits ALTER COLUMN id SET DEFAULT nextval('visits_id_seq'::regclass);
+
+
+--
+-- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY accounts
+    ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -472,6 +518,20 @@ CREATE INDEX index_platforms_on_name ON platforms USING btree (name);
 --
 
 CREATE INDEX index_platforms_on_parent_id ON platforms USING btree (parent_id);
+
+
+--
+-- Name: index_sites_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_sites_on_account_id ON sites USING btree (account_id);
+
+
+--
+-- Name: index_users_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_account_id ON users USING btree (account_id);
 
 
 --
@@ -610,3 +670,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121213235427');
 INSERT INTO schema_migrations (version) VALUES ('20121215010950');
 
 INSERT INTO schema_migrations (version) VALUES ('20121215114233');
+
+INSERT INTO schema_migrations (version) VALUES ('20121215223719');

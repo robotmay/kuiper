@@ -127,6 +127,6 @@ class Kuiper
 
   log: (message, force = false) ->
     if @options.debug || force
-      console.log message
+      console?.log message
 
 window.Kuiper = Kuiper

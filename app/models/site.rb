@@ -2,7 +2,7 @@ class Site < ActiveRecord::Base
   include Redis::Objects
   define_callbacks :counters_updated
 
-  belongs_to :user
+  belongs_to :account
   has_many :visits
   has_many :pages
   has_many :online_visitor_counts
@@ -69,16 +69,17 @@ class Site < ActiveRecord::Base
   def log_current_online_visitors_count
     online_visitor_counts.create(count: online_visitors.count)
   end
-  
-  def pusher_channel
-    "private-site-#{id}"
+
+  def pusher_json
+    # Don't touch, this is a hack to support strange structures in rabl
+    site = SiteDecorator.new(self)
+    data = OpenStruct.new({ model_name: "Site", model_data: site })
+    json = Rabl::Renderer.json(data, "sites/pusher")
   end
 
   def push(event = "updated")
     begin
-      site = SiteDecorator.new(self)
-      json = Rabl::Renderer.json(site, "sites/show")
-      Pusher.trigger(pusher_channel, event, json)
+      Pusher.trigger(account.pusher_channel, event, pusher_json)
     rescue Pusher::Error => ex
       #TODO: Figure out what to do with errors
     end

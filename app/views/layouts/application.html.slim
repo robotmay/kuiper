@@ -5,6 +5,15 @@ html
     = stylesheet_link_tag "application"
     = csrf_meta_tags
   body
-    div class="workspace"
-      = yield
+    div class="container-fluid"
+      header
+        div class="row-fluid"
+          div class="logo span4"
+            = "Kuiper"
+          div class="span8"
+        div class="row-fluid" data-yield="header-extra"
+
+      div class="workspace" data-yield="main"
+        = yield
+
     = javascript_include_tag "application"

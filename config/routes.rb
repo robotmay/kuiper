@@ -12,5 +12,13 @@ Kuiper::Application.routes.draw do
     resources :visits
   end
 
+  resources :users do
+    collection do
+      get :current
+    end
+  end
+
+  post "/pusher/auth" => "dashboard#auth"
+
   root to: "dashboard#show"
 end

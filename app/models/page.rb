@@ -48,15 +48,11 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def pusher_channel
-    "private-page-#{id}"
-  end
-
   def push(event = "updated")
     begin
       page = PageDecorator.new(self)
       json = Rabl::Renderer.json(page, "pages/show")
-      Pusher.trigger(pusher_channel, event, json)
+      Pusher.trigger(account.pusher_channel, event, json)
     rescue Pusher::Error => ex
       #TODO: Figure out what to do with errors
     end
