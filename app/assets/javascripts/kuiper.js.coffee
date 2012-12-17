@@ -3,16 +3,18 @@ Kuiper = $.sammy ->
 
   @get "#/", (context) ->
 
-Kuiper.Base = Stapes.create().extend()
+Kuiper.Base = Stapes.create().extend
+  ajax: jQuery.ajax
 
 Kuiper.IdentityMap = Kuiper.Base.create().extend
+  delete: (id) ->
+    #TODO: Delete a single record
   clear: ->
     #TODO: Clear all records
 
   find: (id) ->
     records = @filter (record) ->
       record.get('id') == id
-    console.log records
     records[0]
 
   add: (record) ->
@@ -34,19 +36,31 @@ Kuiper.IdentityMap = Kuiper.Base.create().extend
 Kuiper.Model = Kuiper.Base.create().extend
   identityMap: Kuiper.IdentityMap.create()
   path: ""
-
-  find: (id, callback) ->
-    record = @identityMap.findOrAdd id, (addCallback) =>
-      $.getJSON @recordPath(id), (data) =>
-        record = addCallback @create().set(data)
-        callback(record)
+  format: "json"
 
   recordPath: (id) ->
-    "#{@path}/#{id}.json"
-    
+    "#{@path}/#{id}.#{@format}"
+
+  find: (id, successCallback) ->
+    record = @identityMap.findOrAdd id, (addCallback) =>
+      @fetch id, (record) =>
+        mappedRecord = addCallback(record)
+        @emit "loaded"
+        successCallback(mappedRecord)
+
+  fetch: (id, successCallback) ->
+    $.getJSON @recordPath(id), (data) =>
+      record = @create().set(data)
+      successCallback(record)
+
+  updateAttributes: (obj, createNew = false) ->
+    for key, value in obj
+      if @has(key) or createNew
+        @set key, value
+          
 Kuiper.Collection = Kuiper.Base.create().extend
-  path: ""
   model: null
+  path: model.create().path
 
   all: ->
     @getAllAsArray()
