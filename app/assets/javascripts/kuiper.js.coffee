@@ -4,15 +4,42 @@ Kuiper = $.sammy ->
   @get "#/", (context) ->
 
 Kuiper.Base = Stapes.create().extend()
-  # Useful for base extensions
+
+Kuiper.IdentityMap = Kuiper.Base.create().extend
+  clear: ->
+    #TODO: Clear all records
+
+  find: (id) ->
+    records = @filter (record) ->
+      record.get('id') == id
+    console.log records
+    records[0]
+
+  add: (record) ->
+    @push record
+    @find record.get('id')
+
+  findOrAdd: (id, addCallback) ->
+    mapRecord = @find(id)
+
+    if !mapRecord
+      console?.log "Record not found in identity map"
+      mapRecord = addCallback (record) =>
+        @add(record)
+    else
+      console?.log "Record found in identity map"
+
+    mapRecord
 
 Kuiper.Model = Kuiper.Base.create().extend
+  identityMap: Kuiper.IdentityMap.create()
   path: ""
 
   find: (id, callback) ->
-    $.getJSON @recordPath(id), (data) =>
-      model = @create().set(data)
-      callback(model)
+    record = @identityMap.findOrAdd id, (addCallback) =>
+      $.getJSON @recordPath(id), (data) =>
+        record = addCallback @create().set(data)
+        callback(record)
 
   recordPath: (id) ->
     "#{@path}/#{id}.json"
@@ -25,18 +52,28 @@ Kuiper.Collection = Kuiper.Base.create().extend
     @getAllAsArray()
 
   find: (id) ->
-    @filter (item) ->
-      item.id is id
+    items = @filter (item) ->
+      item.get('id') == id
+
+    items[0]
+
+  add: (modelOrObject) ->
+    if modelOrObject instanceof model
+      @push model
+    else
+      @push new model().set(modelOrObject)
+
+  addOrUpdate: (obj) ->
+    existing = @find obj('id')
+    if existing
+      existing.set(obj)
+    else
+      @add(obj)
 
   fetch: ->
     $.getJSON @path, (data) ->
       for obj in data
-        existing = @find(obj.id)
-        if existing
-          existing.set(obj)
-        else
-          new_record = new model()
-          @push new_record.set(obj)
+        @addOrUpdate(obj)
 
 Kuiper.Site = Kuiper.Model.create().extend
   path: "/sites"
