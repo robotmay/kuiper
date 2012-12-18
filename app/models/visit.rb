@@ -1,4 +1,6 @@
 class Visit < ActiveRecord::Base
+  define_callbacks :expanded
+
   belongs_to :site
   belongs_to :page
   belongs_to :browser
@@ -8,6 +10,8 @@ class Visit < ActiveRecord::Base
 
   validates :site_id, :visitor_id, :timestamp, presence: true
   validate :host_allowed?
+
+  set_callback :expanded, :after, :push
 
   def host_allowed?
     unless site.allowed_hosts.include?(uri.host)
@@ -42,9 +46,11 @@ class Visit < ActiveRecord::Base
   end
   
   def expand!
-    find_or_create_page
-    find_or_create_browser
-    find_or_create_platform
+    run_callbacks :expanded do
+      find_or_create_page
+      find_or_create_browser
+      find_or_create_platform
+    end
   end
 
   def find_or_create_page
@@ -161,6 +167,21 @@ class Visit < ActiveRecord::Base
       v.referrer = data[:page][:referrer]
       v.title = data[:page][:title]
       v.last_modified = data[:page][:last_modified]
+    end
+  end
+
+  def pusher_json
+    # Don't touch, this is a hack to support strange structures in rabl
+    visit = VisitDecorator.new(self)
+    data = OpenStruct.new({ model_name: "Visit", model_data: visit })
+    json = Rabl::Renderer.json(data, "visits/pusher")
+  end
+
+  def push(event = "created")
+    begin
+      Pusher.trigger(account.pusher_channel, event, pusher_json)
+    rescue Pusher::Error => ex
+      #TODO: Figure out what to do with errors
     end
   end
 

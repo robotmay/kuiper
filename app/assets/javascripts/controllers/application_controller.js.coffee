@@ -5,8 +5,7 @@ class Kuiper.ApplicationController extends Batman.Controller
     super
 
     # Probably not ideal
-    Kuiper.Site.load (err, sites) =>
-      @set 'sites', sites
+    @set 'sites', Kuiper.Site.get('all')
 
   render: (options = {}) ->
     layout = options.layout ? @layout ? Batman.helpers.underscore(@get('routingKey'))

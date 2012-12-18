@@ -4,12 +4,10 @@ class Kuiper.SitesController extends Kuiper.ApplicationController
   index: (params) ->
     
   show: (params) ->
-    site = Kuiper.Site.find params.id, (err) ->
+    Kuiper.Site.find params.id, (err, site) =>
       throw err if err
-
-    site.observe "hits", (newVal, oldVal) -> console.log [newVal, oldVal]
-
-    @set 'site', site
+      @set 'site', site
+      @set 'visits', site.recent_visits
     
   create: (params) ->
     

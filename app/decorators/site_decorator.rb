@@ -13,4 +13,9 @@ class SiteDecorator < Draper::Base
   def online_visitors
     site.online_visitors.count
   end
+
+  def recent_visits
+    visits = site.visits.order("timestamp DESC").limit(10)
+    visits.map { |v| VisitDecorator.new(v) }
+  end
 end

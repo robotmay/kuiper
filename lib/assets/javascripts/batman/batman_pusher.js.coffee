@@ -31,7 +31,7 @@ class BatmanPusher
     console?.log("updated #{JSON.stringify(pushed_data)}")
     existing = model.get('loaded.indexedBy.id').get(obj.get('id'))
     if existing && existing._storage[0]
-      model._mapIdentity(obj).fire("change")
+      model._mapIdentity(obj)
 
   destroyed: (pushed_data) ->
     console?.log("destroyed #{JSON.stringify(pushed_data)}")

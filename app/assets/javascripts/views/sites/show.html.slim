@@ -2,15 +2,18 @@ section id="sites-show"
   header
     h1 data-source="site.name"
 
-  div class="stats"
-    div
-      | Hits: 
-      span data-source="site.hits"
+  section class="stats"
+    div class="hits"
+      span class="text"
+        = t("sites.hits")
+      span class="number" data-source="site.hits"
 
-    div
-      | Unique hits:
-      span data-source="site.unique_hits"
+    div class="unique_hits"
+      span class="text"
+        = t("sites.unique_hits")
+      span class="number" data-source="site.unique_hits"
 
-    div
-      | People online:
-      span data-source="site.online_visitors"
+    div class="online_visitors"
+      span class="text"
+        = t("sites.online_visitors")
+      span class="number" data-source="site.online_visitors"
