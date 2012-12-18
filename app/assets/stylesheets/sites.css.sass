@@ -1,3 +1,39 @@
 #sites-show
+  header
+    h1
+      text:
+        align: center
+        transform: uppercase
+      letter-spacing: 2px
+      font:
+        family: $lightFontFamily
+        size: 2em
+        weight: 300
+
   .stats
     @include box
+    width: 450px
+    margin:
+      left: auto
+      right: auto
+    padding:
+      top: 10px
+      bottom: 10px
+
+    .hits, .unique_hits, .online_visitors
+      width: 33.3%
+      display: inline-block
+      text-align: center
+      opacity: .9
+
+      .text
+        display: block
+        clear: both
+        font:
+          size: 1.1em
+
+      .number
+        display: block
+        font:
+          family: $lightFontFamily
+          size: 1.6em

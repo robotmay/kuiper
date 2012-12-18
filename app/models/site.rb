@@ -13,7 +13,7 @@ class Site < ActiveRecord::Base
 
   attr_accessible :api_key, :name, :user_id, :allowed_hosts
 
-  validates :user_id, :name, :api_key, presence: true
+  validates :account_id, :name, :api_key, presence: true
 
   before_validation :generate_api_key, on: :create
   after_create { push("created") }
