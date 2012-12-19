@@ -1,19 +1,24 @@
-section id="sites-show"
+section id="sites-show" data-view="siteView" data-view-site="site"
   header
     h1 data-source="site.name"
 
   section class="stats"
     div class="hits"
+      span class="number" data-source="site.hits"
       span class="text"
         = t("sites.hits")
-      span class="number" data-source="site.hits"
 
     div class="unique_hits"
+      span class="number" data-source="site.unique_hits"
       span class="text"
         = t("sites.unique_hits")
-      span class="number" data-source="site.unique_hits"
 
     div class="online_visitors"
+      span class="number" data-source="site.online_visitors"
       span class="text"
         = t("sites.online_visitors")
-      span class="number" data-source="site.online_visitors"
+
+  div class="dashboard"
+    div class="online_visitors_graph"
+    div class="widgets"
+      | Stuff

@@ -16,6 +16,7 @@
     margin:
       left: auto
       right: auto
+      bottom: 30px
     padding:
       top: 10px
       bottom: 10px
@@ -30,10 +31,23 @@
         display: block
         clear: both
         font:
-          size: 1.1em
+          size: 1em
 
       .number
         display: block
         font:
           family: $lightFontFamily
           size: 1.6em
+
+  .dashboard
+    width: 100%
+    
+    .online_visitors_graph
+      height: 100px
+
+      svg
+        fill: $translucentBlack
+        color: $translucentBlack
+
+    .widgets
+      background: $translucentBlack

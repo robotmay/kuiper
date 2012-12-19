@@ -13,6 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require pusher.min
+//= require underscore
+//= require d3.v2.min
+//= require rickshaw.min
 
 // Batman.js and its adapters
 //= require batman/es5-shim
@@ -26,6 +29,7 @@
 //= require_tree ./models
 //= require_tree ./controllers
 //= require_tree ./helpers
+//= require_tree ./views
 
 // Run the Batman app
 $(document).ready(function(){

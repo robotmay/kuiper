@@ -8,6 +8,8 @@ class Kuiper.SitesController extends Kuiper.ApplicationController
       throw err if err
       @set 'site', site
       @set 'visits', site.recent_visits
+      @set 'siteView', new Kuiper.SiteView
+        site: @get 'site'
     
   create: (params) ->
     
