@@ -12,14 +12,12 @@ class Kuiper.SiteView extends Batman.View
         width: chart_el.width()
         height: chart_el.height()
         renderer: "area"
+        interpolation: "basis"
         series: [{
           data: @mapVisitorCounts site.get('online_visitor_counts')
         }]
 
       axes = new Rickshaw.Graph.Axis.Time
-        graph: chart
-
-      smoother = new Rickshaw.Graph.Smoother
         graph: chart
 
       chart.render()
