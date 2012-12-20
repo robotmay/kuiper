@@ -4,4 +4,7 @@ class Kuiper.Visit extends Batman.Model
 
   @belongsTo 'site'
 
-  @encode 'site_id'
+  @encode 'site_id', 'id', 'timestamp', 'site_id', 'browser', 
+          'platform', 'screen_size', 'browser_inner_size',
+          'url', 'path'
+

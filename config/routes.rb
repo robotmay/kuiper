@@ -12,6 +12,8 @@ Kuiper::Application.routes.draw do
     resources :visits
   end
 
+  resources :visits
+
   resources :users do
     collection do
       get :current

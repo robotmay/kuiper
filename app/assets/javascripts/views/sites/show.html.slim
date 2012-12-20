@@ -21,4 +21,6 @@ section id="sites-show" data-view="siteView" data-view-site="site"
   div class="dashboard"
     div class="online_visitors_graph"
     div class="widgets"
-      | Stuff
+      section class="visits"
+        article class="visit" data-foreach-visit="site.visits"
+          a data-source="visit.path"

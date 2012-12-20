@@ -13,6 +13,13 @@ class Visit < ActiveRecord::Base
 
   set_callback :expanded, :after, :push
 
+  scope :expanded, lambda {
+    where("site_id IS NOT NULL").
+    where("page_id IS NOT NULL").
+    where("browser_id IS NOT NULL").
+    where("platform_id IS NOT NULL")
+  }
+
   def host_allowed?
     unless site.allowed_hosts.include?(uri.host)
       errors.add(:url, "URL does not match allowed hosts")

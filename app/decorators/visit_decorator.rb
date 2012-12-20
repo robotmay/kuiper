@@ -1,6 +1,7 @@
 class VisitDecorator < Draper::Base
   decorates :visit
-  allows :site_id, :browser, :platform
+  decorates_association :page
+  allows :id, :timestamp, :site_id, :url, :path, :browser, :platform, :screen_size, :browser_inner_size
 
   def browser
     visit.browser.name
@@ -8,5 +9,9 @@ class VisitDecorator < Draper::Base
 
   def platform
     visit.platform.name
+  end
+
+  def path
+    visit.uri.path
   end
 end
