@@ -14,17 +14,21 @@ class Kuiper.SiteView extends Batman.View
         renderer: "area"
         interpolation: "basis"
         series: [{
+          name: "People online"
           data: @mapVisitorCounts site.get('online_visitor_counts')
         }]
 
-      axes = new Rickshaw.Graph.Axis.Time
+      tooltip = new Rickshaw.Graph.HoverDetail
         graph: chart
+        formatter: (series, x, y) ->
+          "<span class='name'>#{series.name}: #{y}</span>" + 
+          "<span class='date'>#{new Date(x * 1000).toUTCString()}</span>"
 
       chart.render()
 
       site.observe "online_visitor_counts", (newValue, oldValue) =>
         chart.series[0].data = @mapVisitorCounts(newValue)
-        chart.update()
+        chart.render()
 
   mapVisitorCounts: (visitor_counts) ->
     counts = _.map visitor_counts, (ovc) ->

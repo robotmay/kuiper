@@ -50,19 +50,30 @@ class Site < ActiveRecord::Base
     end
   end
 
-  def add_or_remove_from_online_visitors(visit_id)
-    run_callbacks :counters_updated do
-      visit = Visit.find(visit_id)
-      timestamp = visit.timestamp.to_i.to_s
-      last_seen = online_visitors[visit.visitor_id]
+  def add_to_online_visitors(visit_id)
+    visit = Visit.find(visit_id)
+    timestamp = visit.timestamp.to_i.to_s
 
-      if last_seen.present? && last_seen == timestamp
-        online_visitors.delete(visit.visitor_id)
-      else
+    unless online_visitors.keys.include?(visit.visitor_id)
+      run_callbacks :counters_updated do
         online_visitors[visit.visitor_id] = timestamp
-        #TODO: Allow this to be configured per site
         OnlineVisitorsWorker.perform_in(1.minute, visit.id)
       end
+    end
+  end
+
+  def remove_from_online_visitors(visit_id)
+    visit = Visit.find(visit_id)
+    timestamp = visit.timestamp.to_i.to_s
+    last_seen = online_visitors[visit.visitor_id]
+
+    if last_seen == timestamp
+      run_callbacks :counters_updated do
+        online_visitors.delete(visit.visitor_id)
+      end
+    else
+      #TODO: Allow this to be configured per site
+      OnlineVisitorsWorker.perform_in(1.minute, visit.id)
     end
   end
 
