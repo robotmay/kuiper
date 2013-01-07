@@ -84,7 +84,8 @@ CREATE TABLE browsers (
     rgt integer,
     depth integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    short_name character varying(255)
 );
 
 
@@ -183,7 +184,8 @@ CREATE TABLE platforms (
     rgt integer,
     depth integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    short_name character varying(255)
 );
 
 
@@ -672,3 +674,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121215010950');
 INSERT INTO schema_migrations (version) VALUES ('20121215114233');
 
 INSERT INTO schema_migrations (version) VALUES ('20121215223719');
+
+INSERT INTO schema_migrations (version) VALUES ('20130107103156');

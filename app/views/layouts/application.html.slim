@@ -14,4 +14,5 @@ html
       div class="workspace" data-yield="main"
         = yield
 
-    = javascript_include_tag "application"
+    - if user_signed_in?
+      = javascript_include_tag "application"

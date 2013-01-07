@@ -15,9 +15,11 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: castle_development
+  database: kuiper_development
   pool: 5
   host: localhost
+  user: robertmay
+  password: password
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -40,12 +42,16 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: castle_test
+  database: kuiper_test
   pool: 5
   host: localhost
+  user: robertmay
+  password: password
 
 production:
   adapter: postgresql
   encoding: unicode
-  database: castle_production
+  database: kuiper_production
   pool: 5
+  username: kuiper
+  password:

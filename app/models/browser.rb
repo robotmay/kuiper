@@ -13,7 +13,11 @@ class Browser < ActiveRecord::Base
   def self.find_or_create_from_user_agent(user_agent)
     ua_browser = user_agent.device.engine.browser
     browser = find_or_create_by_name(ua_browser.name)
-    version = browser.children.find_or_create_by_name([ua_browser.name, ua_browser.version].join(" "))
+    name = [ua_browser.name, ua_browser.version].join(" ")
+    version = browser.children.find_by_name(name) || browser.children.create do |b|
+      b.name = name
+      b.short_name = ua_browser.type
+    end
     return version
   end
 end

@@ -13,7 +13,11 @@ class Platform < ActiveRecord::Base
   def self.find_or_create_from_user_agent(user_agent)
     ua_platform = user_agent.device.operating_system
     platform = find_or_create_by_name(ua_platform.name)
-    version = platform.children.find_or_create_by_name([ua_platform.name, ua_platform.version].join(" "))
+    name = [ua_platform.name, ua_platform.version].join(" ")
+    version = platform.children.find_by_name(name) || platform.children.create do |p|
+      p.name = name
+      p.short_name = ua_platform.type
+    end
     return version
   end
 end
