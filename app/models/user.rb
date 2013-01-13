@@ -13,4 +13,8 @@ class User < ActiveRecord::Base
     channels << account.pusher_channel
     channels
   end
+
+  before_create do
+    create_account
+  end
 end

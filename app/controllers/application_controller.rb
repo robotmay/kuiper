@@ -4,6 +4,6 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
 
   def current_account
-    current_user.account if user_signed_in?
+    @current_account ||= current_user.account
   end
 end
