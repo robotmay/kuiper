@@ -2,13 +2,14 @@ class Visit < ActiveRecord::Base
   define_callbacks :expanded
 
   belongs_to :site
+  has_one :account, through: :site
   belongs_to :page
   belongs_to :browser
   belongs_to :platform
   serialize :plugins
   attr_accessible :visitor_id
 
-  validates :site_id, :visitor_id, :timestamp, presence: true
+  validates :site_id, :visitor_id, :timestamp, :user_agent, presence: true
   validate :host_allowed?
 
   set_callback :expanded, :after, :push

@@ -3,6 +3,7 @@ class Page < ActiveRecord::Base
   define_callbacks :counters_updated
 
   belongs_to :site
+  has_one :account, through: :site
   has_many :visits
 
   counter :hits
