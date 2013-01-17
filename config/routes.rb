@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 Kuiper::Application.routes.draw do
-  mount Sidekiq::Web => '/queue'
+  mount Sidekiq::Web => '/sidekiq'
   devise_for :users
   
   resources :sites do
