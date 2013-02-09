@@ -102,8 +102,7 @@ namespace :kuiper do
           sleep (1..5).to_a.sample
         end
         
-        sleep (1..20).to_a.sample
-        break
+        sleep (1..5).to_a.sample
       end
     end
   end

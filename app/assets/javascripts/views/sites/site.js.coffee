@@ -21,7 +21,7 @@ class Kuiper.SiteView extends Batman.View
       tooltip = new Rickshaw.Graph.HoverDetail
         graph: chart
         formatter: (series, x, y) ->
-          "<span class='name'>#{series.name}: #{y}</span>" + 
+          "<span class='name'>#{series.name}: #{y}</span>" +
           "<span class='date'>#{new Date(x * 1000).toUTCString()}</span>"
 
       chart.render()
