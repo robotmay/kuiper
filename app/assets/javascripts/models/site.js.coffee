@@ -6,5 +6,5 @@ class Kuiper.Site extends Batman.Model
   @hasMany 'pages'
   @hasMany 'visits'
 
-  @encode 'name', 'api_key', 'allowed_hosts', 'hits', 
+  @encode 'name', 'api_key', 'allowed_hosts', 'hits',
           'unique_hits', 'online_visitors', 'recent_visits', 'online_visitor_counts'

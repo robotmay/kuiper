@@ -9,7 +9,7 @@ class Kuiper.SitesController extends Kuiper.ApplicationController
       @set 'site', site
       @set 'visits', site.get('visits')
       @set 'siteView', new Kuiper.SiteView
-        site: @get 'site'
+        site: @get('site')
     
   create: (params) ->
     

@@ -8,9 +8,10 @@ class BatmanPusher
   getModelAndObject: (pushed_data) ->
     model = Batman.currentApp[pushed_data.model_name]
     data = pushed_data.model_data
-    obj = new model()
-    obj._withoutDirtyTracking -> obj.fromJSON(data)
-    return [model, obj]
+    if model
+      obj = new model()
+      obj._withoutDirtyTracking -> obj.fromJSON(data)
+      return [model, obj]
 
   delayIfXhrRequests: (method, pushed_data) ->
     if BatmanPusher.activeXhrCount == 0
