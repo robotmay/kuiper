@@ -9,9 +9,9 @@ html
       header
         div class="logo"
           = "Kuiper"
-        div data-yield="header-extra"
+        div
 
-      div class="workspace" data-yield="main"
+      div class="workspace" id="main"
         = yield
 
     - if user_signed_in?

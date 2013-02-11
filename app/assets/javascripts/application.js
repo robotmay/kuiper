@@ -17,22 +17,15 @@
 //= require d3.v2.min
 //= require rickshaw.min
 
-// Batman.js and its adapters
-//= require batman/es5-shim
-//= require batman/batman
-//= require batman/batman.jquery
-//= require batman/batman.rails
-//= require batman/batman_pusher
-
+//= require handlebars
+//= require ember
+//= require ember-data
 //= require kuiper
-
-//= require_tree ./models
-//= require_tree ./controllers
-//= require_tree ./helpers
-//= require_tree ./views
-
-// Run the Batman app
-$(document).ready(function(){
-  Kuiper.run();
-});
-
+//= require ./kuiper/store
+//= require_tree ./kuiper/models
+//= require_tree ./kuiper/controllers
+//= require_tree ./kuiper/views
+//= require_tree ./kuiper/helpers
+//= require_tree ./kuiper/templates
+//= require ./kuiper/router
+//= require_tree ./kuiper/routes

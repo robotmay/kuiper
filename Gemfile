@@ -16,7 +16,7 @@ gem 'activerecord-postgres-hstore'
 gem 'multi_fetch_fragments'
 gem 'redis-objects', require: 'redis/objects'
 gem 'awesome_nested_set'
-gem 'draper'
+gem 'draper', '~> 0.18.0' #TODO: Requires code changes to update to 1.1
 gem 'pusher'
 
 group :development do
@@ -30,9 +30,6 @@ group :assets do
 end
 
 gem 'therubyracer'
-gem 'less-rails'
-gem 'twitter-bootstrap-rails'
 gem 'jquery-rails'
-gem 'batman-rails'
+gem 'ember-rails'
 gem 'slim_assets'
-gem 'ejs'
