@@ -66,5 +66,7 @@ module Kuiper
     config.assets.version = '1.0'
     config.assets.initialize_on_precompile = false
     config.assets.precompile += ['client.js']
+
+    config.handlebars.templates_root = 'kuiper/templates'
   end
 end

@@ -1,2 +1,2 @@
-window.Kuiper = Ember.Application.createWithMixins
+window.Kuiper = Ember.Application.create
   rootElement: '#main'

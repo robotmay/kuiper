@@ -5,14 +5,8 @@ html
     = stylesheet_link_tag "application"
     = csrf_meta_tags
   body
-    div class="container"
-      header
-        div class="logo"
-          = "Kuiper"
-        div
-
-      div class="workspace" id="main"
-        = yield
+    div id="main"
+      = yield
 
     - if user_signed_in?
       = javascript_include_tag "application"

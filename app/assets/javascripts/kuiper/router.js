@@ -1,3 +1,0 @@
-Kuiper.Router.map(function() {
-
-});
