@@ -11,7 +11,7 @@ class Site < ActiveRecord::Base
   counter :unique_hits
   hash_key :online_visitors
 
-  attr_accessible :api_key, :name, :user_id, :allowed_hosts
+  attr_accessible :api_key, :name, :allowed_hosts
 
   validates :account_id, :name, :api_key, presence: true
 
@@ -85,7 +85,7 @@ class Site < ActiveRecord::Base
     # Don't touch, this is a hack to support strange structures in rabl
     site = SiteDecorator.new(self)
     data = OpenStruct.new({ model_name: "Site", model_data: site })
-    json = Rabl::Renderer.json(data, "sites/pusher")
+    Rabl::Renderer.json(data, "sites/pusher")
   end
 
   def push(event = "updated")

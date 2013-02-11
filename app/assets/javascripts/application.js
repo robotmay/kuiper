@@ -20,6 +20,8 @@
 //= require handlebars
 //= require ember
 //= require ember-data
+
+//= require_tree ./kuiper/lib
 //= require kuiper
 //= require ./kuiper/store
 //= require_tree ./kuiper/models
