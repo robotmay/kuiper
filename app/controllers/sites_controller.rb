@@ -8,14 +8,12 @@ class SitesController < ApplicationController
   end
 
   def show
-    @site = current_account.sites.find(params[:id])
-    @site = SiteDecorator.new(@site)
+    @site = current_account.sites.find(params[:id]).decorate
     respond_with @site
   end
 
   def create
-    @site = current_account.sites.new(params[:site])
-    @site = SiteDecorator.new(@site)
+    @site = current_account.sites.new(params[:site]).decorate
     if @site.save
       respond_with @site
     else
@@ -24,8 +22,7 @@ class SitesController < ApplicationController
   end
 
   def update
-    @site = current_account.sites.find(params[:id])
-    @site = SiteDecorator.new(@site)
+    @site = current_account.sites.find(params[:id]).decorate
     if @site.update_attributes(params[:site])
       respond_with @site
     else

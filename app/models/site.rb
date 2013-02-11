@@ -16,8 +16,9 @@ class Site < ActiveRecord::Base
   validates :account_id, :name, :api_key, presence: true
 
   before_validation :generate_api_key, on: :create
-  after_create { push("created") }
-  set_callback :counters_updated, :after, :push
+  set_callback :counters_updated, :after, lambda {
+    notify_observers(:after_counter_update)
+  }
 
   def visitor_ids
     @visitor_ids ||= Rails.cache.fetch("sites/#{id}/visitor_ids", expires_in: 10.minutes) do
@@ -81,19 +82,8 @@ class Site < ActiveRecord::Base
     online_visitor_counts.create(count: online_visitors.count)
   end
 
-  def pusher_json
-    # Don't touch, this is a hack to support strange structures in rabl
-    site = SiteDecorator.new(self)
-    data = OpenStruct.new({ model_name: "Site", model_data: site })
-    Rabl::Renderer.json(data, "sites/pusher")
-  end
-
-  def push(event = "updated")
-    begin
-      Pusher.trigger(account.pusher_channel, event, pusher_json)
-    rescue Pusher::Error => ex
-      #TODO: Figure out what to do with errors
-    end
+  def pusher_channel
+    "#{account.pusher_channel}-sites"
   end
 
   private

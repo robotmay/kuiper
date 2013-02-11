@@ -28,7 +28,10 @@ class Visit < ActiveRecord::Base
   end
 
   def user_agent
-    AgentOrange::UserAgent.new(super)
+    ua = super
+    unless ua.nil?
+      AgentOrange::UserAgent.new(ua)
+    end
   end
 
   def uri

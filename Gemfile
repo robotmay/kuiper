@@ -5,7 +5,6 @@ gem 'rails', '3.2.11'
 gem 'pg'
 gem 'puma'
 gem 'slim'
-gem 'rabl'
 gem 'oj'
 gem 'sinatra'
 gem 'sidekiq'
@@ -16,7 +15,8 @@ gem 'activerecord-postgres-hstore'
 gem 'multi_fetch_fragments'
 gem 'redis-objects', require: 'redis/objects'
 gem 'awesome_nested_set'
-gem 'draper', '~> 0.18.0' #TODO: Requires code changes to update to 1.1
+gem 'draper'
+gem 'active_model_serializers', github: 'rails-api/active_model_serializers'
 gem 'pusher'
 
 group :development do

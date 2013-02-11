@@ -13,8 +13,9 @@ class Page < ActiveRecord::Base
 
   validates :site_id, :path, presence: true
 
-  after_create { push("created") }
-  set_callback :counters_updated, :after, :push
+  set_callback :counters_updated, :after, lambda {
+    notify_observers(:after_counter_update)
+  }
 
   def visitor_ids
     @visitor_ids ||= Rails.cache.fetch("pages/#{id}/visitor_ids", expires_in: 10.minutes) do
@@ -49,13 +50,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def push(event = "updated")
-    begin
-      page = PageDecorator.new(self)
-      json = Rabl::Renderer.json(page, "pages/show")
-      Pusher.trigger(account.pusher_channel, event, json)
-    rescue Pusher::Error => ex
-      #TODO: Figure out what to do with errors
-    end
+  def pusher_channel
+    "#{account.pusher_channel}-pages"
   end
 end

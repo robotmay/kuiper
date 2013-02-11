@@ -1,12 +1,13 @@
-class PageDecorator < Draper::Base
-  decorates :page
-  allows :name, :path, :hits, :unique_hits
+class PageDecorator < Draper::Decorator
+  delegate_all
+  decorates_association :site
+  decorates_association :visits
 
   def hits
-    page.hits.value
+    source.hits.value
   end
 
   def unique_hits
-    page.unique_hits.value
+    source.unique_hits.value
   end
 end

@@ -1,6 +1,6 @@
 DS.Model.reopenClass
   channelName: ->
-    @model = this
+    model = this
     parts = model.toString().split('.')
     name = parts[parts.length - 1]
     name.replace(/([A-Z])/g, '_$1').toLowerCase().slice(1)
