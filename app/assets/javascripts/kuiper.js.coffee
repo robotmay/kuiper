@@ -1,11 +1,19 @@
-window.Kuiper = Ember.Namespace.create Ember.Evented,
+window.Kuiper = Ember.Application.create
+  rootElement: '#main'
+
   config:
-    pusher_key: $('meta[name="kuiper.pusher_key"]').attr('value')
+    pusherKey: $('meta[name="kuiper.pusher_key"]').attr('value')
 
-  run: (attrs) ->
-    Ember.run.next this, ->
-      app = Kuiper.App.create(attrs || {})
-      @app = app
-      @store = app.store
-      $ => app.initialize()
+  ready: ->
+    @store = Kuiper.Store.create()
 
+    @set 'currentUser', Kuiper.User.find('current')
+    @set 'currentAccount', Kuiper.Account.find('current')
+
+    @get('currentAccount').on 'didLoad', =>
+      channelPrefix = @get('currentAccount').get('pusherChannel')
+      @pusher = new Kuiper.Pusher
+        key: Kuiper.config.pusherKey
+        channelPrefix: channelPrefix,
+        store: @store
+      @pusher.subscribeModels [Kuiper.Site, Kuiper.Page]

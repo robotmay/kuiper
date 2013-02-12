@@ -1,13 +1,15 @@
-Kuiper.Pusher = (key) ->
-  @init(key) if key
+Kuiper.Pusher = (opts = {}) ->
+  @init(opts)
   this
 
 $.extend Kuiper.Pusher.prototype,
+  options: {}
   activeChannels: []
 
-  init: (@key, @prefix, @store) ->
-    @pusher = new Pusher(@key)
+  init: (@options) ->
+    @pusher = new Pusher(@options.key)
     @pusher.connection.bind 'connected', => @connected()
+    @store = @options.store
 
   connected: ->
     @socketID = @pusher.connection.socket_id
@@ -22,14 +24,14 @@ $.extend Kuiper.Pusher.prototype,
       @subscribeModel(model)
 
   subscribeModel: (model) ->
-    channelName = "#{@prefix}-#{@modelName(model)}"
+    channelName = "#{@options.channelPrefix}-#{@modelName(model)}"
     channel = @pusher.subscribe(channelName)
-
+    console.log [channelName, channel]
     channel.bind 'created', (data) ->
       console?.log ['created', data]
       @store.load(model.constructor, data)
 
-    channel.bind 'updated', (data) ->
+    channel.bind 'updated', (data) =>
       console?.log ['updated', data]
       @store.load(model.constructor, data)
 

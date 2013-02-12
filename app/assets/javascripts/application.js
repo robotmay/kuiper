@@ -22,14 +22,13 @@
 //= require ember-data
 
 //= require kuiper
-//= require kuiper/app
 //= require ./kuiper/store
+//= require ./kuiper/router
 //= require_tree ./kuiper/lib
 //= require_tree ./kuiper/models
 //= require_tree ./kuiper/controllers
 //= require_tree ./kuiper/views
 //= require_tree ./kuiper/helpers
 //= require_tree ./kuiper/templates
-//= require ./kuiper/router
 //= require_tree ./kuiper/routes
 
