@@ -26,17 +26,14 @@ $.extend Kuiper.Pusher.prototype,
   subscribeModel: (model) ->
     channelName = "#{@options.channelPrefix}-#{@modelName(model)}"
     channel = @pusher.subscribe(channelName)
-    console.log [channelName, channel]
-    channel.bind 'created', (data) ->
-      console?.log ['created', data]
-      @store.load(model.constructor, data)
+
+    channel.bind 'created', (data) =>
+      @store.load(model, data)
 
     channel.bind 'updated', (data) =>
-      console?.log ['updated', data]
-      @store.load(model.constructor, data)
-
-    channel.bind 'destroyed', (data) ->
-      console?.log ['destroyed', data]
+      modelNode = data[@modelName(model)]
+      record = model.find(modelNode.id)
+      record.get('store').load(model, modelNode)
     
   modelName: (model) ->
     parts = model.toString().split('.')
