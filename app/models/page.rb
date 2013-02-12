@@ -51,6 +51,6 @@ class Page < ActiveRecord::Base
   end
 
   def pusher_channel
-    "#{account.pusher_channel}-pages"
+    account.pusher_channel(:page)
   end
 end

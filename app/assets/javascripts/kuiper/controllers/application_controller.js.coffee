@@ -1,1 +1,2 @@
-Kuiper.ApplicationController = Ember.Controller.extend()
+Kuiper.ApplicationController = Ember.Controller.extend
+  needs: ['currentUser']

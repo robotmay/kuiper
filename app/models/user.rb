@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
   def available_pusher_channels
     channels = []
     channels << account.pusher_channel
-    channels
+    channels << account.pusher_channel(:site)
+    channels << account.pusher_channel(:page)
   end
 
   before_create do

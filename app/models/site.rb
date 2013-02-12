@@ -83,7 +83,7 @@ class Site < ActiveRecord::Base
   end
 
   def pusher_channel
-    "#{account.pusher_channel}-sites"
+    account.pusher_channel(:site)
   end
 
   private

@@ -18,6 +18,7 @@ gem 'awesome_nested_set'
 gem 'draper'
 gem 'active_model_serializers', github: 'rails-api/active_model_serializers'
 gem 'pusher'
+gem 'cancan'
 
 group :development do
   gem 'pry'

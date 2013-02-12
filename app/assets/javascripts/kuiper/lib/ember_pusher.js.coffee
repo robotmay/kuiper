@@ -1,5 +1,6 @@
 window.EmberPusher = Ember.Object.extend
   key: null
+  pusher: null
 
   init: ->
     @pusher = new Pusher(@get('key'))

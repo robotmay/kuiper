@@ -1,15 +1,28 @@
 DS.Model.reopenClass
-  channelName: ->
+  getChannelPrefix: (callback) ->
+    $.get "/accounts/current.json", (data) ->
+      channel = data['account']['pusher_channel']
+      callback(channel)
+
+  getChannelName: (callback) ->
     model = this
     parts = model.toString().split('.')
     name = parts[parts.length - 1]
     name.replace(/([A-Z])/g, '_$1').toLowerCase().slice(1)
 
-  subscribe: ->
-    @model = this
-    @pusher = EmberPusher.create()
-    @channel = @pusher.subscribe(@channelName())
+    @getChannelPrefix (channel) ->
+      callback("#{channel}-#{name}")
 
-    @channel.bind 'create', (data) ->
-      console?.log(data)
-      DS.defaultStore.load(@model, data.hash)
+  subscribe: ->
+    model = this
+    pusher = EmberPusher.create().pusher
+    @getChannelName (channel) ->
+      channel = pusher.subscribe(channel)
+
+      channel.bind 'created', (data) ->
+        console?.log(data)
+        DS.defaultStore.load(model, data.hash)
+
+      channel.bind 'updated', (data) ->
+        console?.log(data)
+

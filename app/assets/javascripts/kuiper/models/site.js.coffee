@@ -6,6 +6,9 @@ Kuiper.Site = DS.Model.extend
   uniqueHits: DS.attr('number')
   onlineVisitors: DS.attr('number')
 
+  account: DS.belongsTo('Kuiper.Account')
   visits: DS.hasMany('Kuiper.Visit')
   pages: DS.hasMany('Kuiper.Page')
 
+  channelName: ->
+    Kuiper.Account.find("current").get("pusherChannel")

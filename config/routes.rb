@@ -20,6 +20,12 @@ Kuiper::Application.routes.draw do
     end
   end
 
+  resources :accounts, only: [:show] do
+    collection do
+      get :current
+    end
+  end
+
   post "/pusher/auth" => "dashboard#auth"
 
   root to: "dashboard#show"
