@@ -4,6 +4,7 @@ html
     title
     = stylesheet_link_tag "application"
     = csrf_meta_tags
+    meta name="kuiper.pusher_key" value=(Pusher.key)
   body
     div id="main"
       = yield
@@ -11,4 +12,4 @@ html
     - if user_signed_in?
       = javascript_include_tag "application"
       javascript:
-        Kuiper.start()
+        Kuiper.run();

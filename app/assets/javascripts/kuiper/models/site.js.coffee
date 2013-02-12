@@ -11,4 +11,4 @@ Kuiper.Site = DS.Model.extend
   pages: DS.hasMany('Kuiper.Page')
 
   channelName: ->
-    Kuiper.Account.find("current").get("pusherChannel")
+    Kuiper.currentAccount.get("pusherChannel")
